@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
-#import cv2
 import numpy as np
 
 def train_test_split_dataset(test_size):
