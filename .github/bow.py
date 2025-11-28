@@ -1,10 +1,11 @@
+
 import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import cv2
 import numpy as np
 from sklearn.cluster import KMeans
-#from yellowbrick.cluster import KElbowVisualizer
+from yellowbrick.cluster import KElbowVisualizer
    
 def bow_dataset_cv(K, X_train):
     
@@ -25,13 +26,16 @@ def bow_dataset_cv(K, X_train):
     flags = cv2.KMEANS_PP_CENTERS  # indica com escollim els centres inicials. Enlloc de fer-ho de manera random, PP està dissenyat per triar centres inicials més “separats” i acostuma a donar millors solucions.
 
     print("Entrenant K-Means amb OpenCV, K =", K, "clusters...")
+    # compactness: És un número que indica com de bons són els clusters. És la suma de les distàncies al quadrat de cada descriptor al seu centre assignat. Com més petit, millor.
+    # labels: És un array de longitud igual al nombre total de descriptors. Cada element indica a quin cluster ha estat assignat aquest descriptor. Exemple: labels[0] = 3 → el primer descriptor pertany al cluster 3.
+    # centers: És la part més important per BoW. És una matriu (K, 128). K = nombre de clusters, 128 = mida de cada descriptor. Cada fila és el centre d’un cluster, és a dir, una “paraula visual” que representa un grup de descriptors similars.
     compactness, labels, centers = cv2.kmeans(
         all_train_descriptors,  # dades (N, 128)
         K,                      # nº de clusters
         None,                   # sense etiquetes inicials
         criteria,               # criteris d'aturada
-        attempts,
-        flags
+        attempts,               # intents diferents
+        flags                   # com escollir centres inicials
     )
 
     bow_centers = centers  # shape (K, 128). Tenim K centres i 128 és per la longitud del descriptor. Aquest és el millor cas dels 10 provats.
@@ -48,7 +52,7 @@ def bow_dataset_sklearn(K, X_train):
 
     # 2. Creem el model KMeans
     model = KMeans(
-        init='k-means++',  #com inicialitzar els centres 
+        init='k-means++',  #com inicialitzar els centres. Evita problemes de centres inicials molt junts i accelera la convergència.
         max_iter=100,      #màxim d’iteracions
         tol=0.01,          #tolerància per parar
         n_init=10,         #intents diferents amb inicialitzacions diferents
@@ -57,6 +61,7 @@ def bow_dataset_sklearn(K, X_train):
     model.fit(all_train_descriptors)
     bow_centers = model.cluster_centers_
     return bow_centers
+
 
 
 def bow_dataset2(X_train):
@@ -71,13 +76,22 @@ def bow_dataset2(X_train):
         tol=0.01,          # tolerància per parar
         n_init=10,         # intents diferents amb inicialitzacions diferents
         random_state=42
-)
+    )   
 
     # 3. Creem el visualizer i triem la mètrica elbow o silhouette
+    
+    # KElbowVisualizer → eina de Yellowbrick que ajuda a triar automàticament K.
+    # k=(40, 50) → prova valors de K entre 40 i 50.
+    # metric='distortion' → calcula la distorsió, és a dir la suma de distàncies dels descriptors als centres assignats.
+    
     visualizer = KElbowVisualizer(model, k=(40, 50), metric='distortion')  # ajusta k màxim segons el que vulguis
     visualizer.fit(all_train_descriptors)
 
     # 4. Millor nombre de clusters automàtic
+
+    # visualizer.elbow_value_ → retorna el K on l’elbow és més clar.
+    # Això ens dóna el nombre ideal de paraules visuals per al nostre dataset.
+    
     best_k = visualizer.elbow_value_
     print("Millor k trobat:", best_k)
 
@@ -86,3 +100,8 @@ def bow_dataset2(X_train):
     final_kmeans.fit(all_train_descriptors)
     bow_centers = final_kmeans.cluster_centers_
     print("Shape bow_centers:", bow_centers.shape)
+
+
+
+
+

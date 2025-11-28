@@ -48,8 +48,8 @@ def train_test_split_dataset(test_size, max_desc=50, df_file='descriptors_df.pkl
         print(f"Carregant DataFrame des de {df_file}...")
         df = pd.read_pickle(df_file)
     else:
-        #labels = [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))] #traiem els labels que son els noms de les carpetes amb la opció que funcioni per macOS
-        labels = os.listdir(path) #traiem els labels que son els noms de les carpetes
+        labels = [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))] #traiem els labels que son els noms de les carpetes amb la opció que funcioni per macOS
+        #labels = os.listdir(path) #traiem els labels que son els noms de les carpetes
         data = [] #llista on guardarem els descriptors i labels, serà una llista de llistes
         for label in labels: #recorrem cada carpeta
             img_dir_path = os.path.join(path, label) #creem el path de la carpeta
@@ -77,19 +77,3 @@ def train_test_split_dataset(test_size, max_desc=50, df_file='descriptors_df.pkl
     )
 
     return x_train, x_test, y_train, y_test
-
-if __name__ == "__main__":
-    # Proves només si s'executa aquest fitxer directament
-    x_train, x_test, y_train, y_test = train_test_split_dataset(test_size=0.2)
-
-    print("Train:", len(x_train))
-    print("Test:", len(x_test))
-    print("Classes al TRAIN:", sorted(list(set(y_train))))
-    print("Classes al TEST:", sorted(list(set(y_test))))
-    
-    print("Distribució Train:")
-    print(y_train.value_counts())
-    print("Distribució Test:")
-    print(y_test.value_counts())
-
-    

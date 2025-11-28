@@ -10,8 +10,8 @@ def bow_histogram(descriptors, centers): #calcula l'historgama per cada imatge
     #per defecte ho fa amb la distància euclidiana, però podem canviar-ho per estudiar el rendiment
     dists = cdist(descriptors, centers)
 
-    #per cada descriptor, triem la paraula visual més propera (centre més proper), canviar a soft assignment per veure si millora 
-    #words és un array de longitud N_descriptors, on cada element és l'índex del centre més proper
+    #per cada descriptor, triem la paraula visual més propera (centre més proper) - hard assignment. MILLORA: canviar a soft assignment per veure si millora 
+    #words és un array de longitud N_descriptors, on cada element és l'índex del centre més proper. Exemple: words[0] = 5
     words = np.argmin(dists, axis=1)
 
     #constuïm l'histograma comptant quantes vegades apareix cada paraula visual
@@ -25,6 +25,8 @@ def bow_histogram(descriptors, centers): #calcula l'historgama per cada imatge
 
     return hist
 
+# Aquesta funció calcula els histogrames per totes les imatges del conjunt d’entrenament.
+# X → llista o pandas.Series amb descriptors per cada imatge.
 def calcula_histograma_train(X, centers):
     
     hists = []
@@ -34,3 +36,6 @@ def calcula_histograma_train(X, centers):
     #lo del X.index és per mantenir els indexos originals del X d'entrada i després poder-ho emparellar amb les Y
 
     
+
+
+
