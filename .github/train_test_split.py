@@ -3,77 +3,128 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 import numpy as np
 import cv2
+import pickle
+import csv
 
+# ============================================================
+# 1. Funció per obtenir descriptors SIFT
+# ============================================================
 def get_sift_descriptors_for_image(img_path, max_desc):
-        
-        # Crear objecte SIFT. És un objecte Python amb els seus mètodes. Per obtenir els descriptors, utilitzem un mètode d'aquesta classe.
-        sift = cv2.SIFT_create()
+    sift = cv2.SIFT_create()
+    img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+    if img is None:
+        return None
 
-        # Llegim la imatge i la convertim en una matriu numpy. La passem a gray scale perquè SIFT només funciona amb aquesta escala de colors.
-        #Possible millora: utilitzar RGB.
-        img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
-        if img is None:
-            return None
-        
-        # Obtenim punts d'interès (keypoints: llista d'objectes cv2.keypoints) i guardem la informació en l'array descriptors (array numpy (N,128)).
-        #Si no hi ha descriptors, retorna None.
-        keypoints, descriptors = sift.detectAndCompute(img, None)
-        if descriptors is None or len(descriptors) == 0:
-            return None
+    keypoints, descriptors = sift.detectAndCompute(img, None)
+    if descriptors is None or len(descriptors) == 0:
+        return None
 
-        # Comencem agafant tots els descriptors de la imatge. Si aquest nombre és major al llindar establert, agafem aleatòriament
-        # aquest nombre de descriptors.
-        if descriptors.shape[0] > max_desc:
-            idx = np.random.choice(descriptors.shape[0], max_desc, replace=False)
-            descriptors = descriptors[idx]
+    # Limitem nombre descriptors
+    if descriptors.shape[0] > max_desc:
+        idx = np.random.choice(descriptors.shape[0], max_desc, replace=False)
+        descriptors = descriptors[idx]
 
+    return descriptors
 
-        # Normalització L2 de cada descritor.
-        # En descriptors com SIFT, la intensitat global de la imatge pot fer que els valors del descriptor siguin més grans o més petits.
-        # Fem que la longitud del vector sigui 1, fa que cap descriptor tingui “més pes” només perquè té valors més grans.
+# ============================================================
+# 2. Funció per guardar un pickle per imatge
+# ============================================================
+def save_image_pickle(descriptors, label, image_index, output_path):
+    data = {
+        "image_index": image_index,  # ara és un número
+        "label": label,
+        "descriptors": descriptors
+    }
+    with open(output_path, "wb") as f:
+        pickle.dump(data, f)
 
-        norms = np.linalg.norm(descriptors, axis=1, keepdims=True)  #norms és un array columna on cada element és la longitud del descriptor. El keepdims=True serveix per retornar norms com una matriu columna (1,N), i després poder-ho dividir per descriptors fila per fila sense errors (operacions entre matrius).
-        norms[norms == 0] = 1.0 # Ho fem per no dividir després 0 entre 0.
-        descriptors = descriptors / norms #dividim el vector entre la seva longitud
+# ============================================================
+# 3. Funció principal per processar dataset
+# ============================================================
+def train_test_split_dataset(test_size=0.2, max_desc=50):
+    base_path = os.getcwd()
+    images_path = os.path.join(base_path, "Indian Food Images")
+    pickle_root = os.path.join(base_path, "Pickles Per Imatge")
 
-        return descriptors
+    os.makedirs(pickle_root, exist_ok=True)
 
+    index_map = {}     # Diccionari: image_index → path original
+    df_rows = []       # Cada entrada: descriptors, label, image_index
 
-def train_test_split_dataset(test_size, max_desc=50, df_file='descriptors_df.pkl'):
-    base_path = os.getcwd() #aconseguim el path d'on estem
-    path = os.path.join(base_path, "Indian Food Images") #li afegim el path de la carpeta amb les imatges
+    # Comptador d’imatges
+    image_counter = 1
 
-    #la primera vegada guardem el dataframe amb els descriptors i els labels, sino el carreguem directament
-    if os.path.exists(df_file):
-        print(f"Carregant DataFrame des de {df_file}...")
-        df = pd.read_pickle(df_file)
-    else:
-        labels = [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))] #traiem els labels que son els noms de les carpetes amb la opció que funcioni per macOS
-        #labels = os.listdir(path) #traiem els labels que son els noms de les carpetes
-        data = [] #llista on guardarem els descriptors i labels, serà una llista de llistes
-        for label in labels: #recorrem cada carpeta
-            img_dir_path = os.path.join(path, label) #creem el path de la carpeta
-            for img in os.listdir(img_dir_path): #recorrem cada imatge de la carpeta
-                img_path = os.path.join(img_dir_path, img) #creem el path de la imatge
-                descriptors = get_sift_descriptors_for_image(img_path, max_desc) #extreiem els descriptors de la imatge
-                if descriptors is not None: #en cas de tenir-ne
-                    data.append([descriptors, label]) #afegim els descriptors i el label a la llista
+    # Recorrem carpetes (classes)
+    labels = sorted([d for d in os.listdir(images_path)
+                     if os.path.isdir(os.path.join(images_path, d))])
 
-        df = pd.DataFrame(data, columns=['descriptors', 'label']) #creem el dataframe amb els descriptors i labels
+    print("Processant dataset i generant pickles amb index numèric...")
 
-        # Guardem el DataFrame per ús futur
-        df.to_pickle(df_file)
-        print(f"DataFrame guardat a {df_file}.")
+    for label in labels:
+        class_img_folder = os.path.join(images_path, label)
+        class_pickle_folder = os.path.join(pickle_root, label)
+        os.makedirs(class_pickle_folder, exist_ok=True)
 
-    #print(df.head())
+        for img_name in os.listdir(class_img_folder):
+            img_path = os.path.join(class_img_folder, img_name)
+            image_index = image_counter
+            pickle_path = os.path.join(class_pickle_folder, f"{image_index}.pkl")
 
-    # fem split,però tenint en compte que la base de dades pot estar esbiaixada i per això podem el stratify
-    x_train, x_test, y_train, y_test = train_test_split(
-        df['descriptors'],
-        df['label'],
+            # ✔️ Si el pickle JA existeix → Només el carreguem
+            if os.path.exists(pickle_path):
+                with open(pickle_path, "rb") as f:
+                    data = pickle.load(f)
+                descriptors = data["descriptors"]
+                df_rows.append([descriptors, label, image_index])
+                index_map[image_index] = img_path
+                image_counter += 1
+                continue
+
+            # ✔️ Sino → Càlcul SIFT + guardat pickle
+            descriptors = get_sift_descriptors_for_image(img_path, max_desc)
+            if descriptors is None:
+                continue
+
+            save_image_pickle(descriptors, label, image_index, pickle_path)
+            df_rows.append([descriptors, label, image_index])
+            index_map[image_index] = img_path
+            image_counter += 1
+
+    # Guardem índex global en CSV
+    csv_path = "image_index.csv"
+    with open(csv_path, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["image_index", "path"])  # capçalera
+        for idx, path in index_map.items():
+            writer.writerow([idx, path])
+    print(f"Index global guardat a {csv_path}")
+
+    # Convertim a DataFrame
+    df = pd.DataFrame(df_rows, columns=["descriptors", "label", "image_index"])
+
+    # Train / Test split (amb stratify)
+    x_train, x_test, y_train, y_test, id_train, id_test = train_test_split(
+        df["descriptors"],
+        df["label"],
+        df["image_index"],
         test_size=test_size,
         random_state=42,
-        stratify=df['label']
+        stratify=df["label"]
     )
 
-    return x_train, x_test, y_train, y_test
+    return x_train, x_test, y_train, y_test, id_train, id_test
+
+# ============================================================
+# 4. Exemple si s'executa directament
+# ============================================================
+if __name__ == "__main__":
+    x_train, x_test, y_train, y_test, id_train, id_test = train_test_split_dataset()
+
+    print("\nTrain images:", len(x_train))
+    print("Test images:", len(x_test))
+
+    print("\nClasses al train:", sorted(list(set(y_train))))
+    print("Exemple train:")
+    print("  Image index:", id_train.iloc[0])
+    print("  Label:", y_train.iloc[0])
+    print("  Descriptors shape:", x_train.iloc[0].shape)
