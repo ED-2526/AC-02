@@ -10,16 +10,39 @@ import csv
 # 1. Funció per obtenir descriptors SIFT
 # ============================================================
 def get_sift_descriptors_for_image(img_path, max_desc):
+    """
+    Extreu descriptors SIFT DENSOS:
+    - Es crea una graella regular de keypoints cada 'step' píxels.
+    - Per cada punt de la graella es calcula un descriptor SIFT.
+    - Si hi ha més descriptors que max_desc, se'n seleccionen aleatòriament max_desc.
+    """
     sift = cv2.SIFT_create()
+
     img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
     if img is None:
         return None
 
-    keypoints, descriptors = sift.detectAndCompute(img, None)
+    h, w = img.shape
+
+    # Paràmetres de la graella
+    step = 5        # un keypoint cada 5 píxels
+    kp_size = 5.0   # "mida" del keypoint (pot ajustar-se)
+
+    keypoints = []
+    # Recorrem la imatge amb una graella regular
+    for y in range(0, h, step):
+        for x in range(0, w, step):
+            # Creem un keypoint a (x, y) amb la mida indicada
+            keypoints.append(cv2.KeyPoint(float(x), float(y), kp_size))
+
+    # A diferència de detectAndCompute, aquí NOMÉS fem compute()
+    # perquè els keypoints els definim nosaltres (graella densa)
+    keypoints, descriptors = sift.compute(img, keypoints)
+
     if descriptors is None or len(descriptors) == 0:
         return None
 
-    # Limitem nombre descriptors
+    # Limitem nombre descriptors (per no rebentar memòria)
     if descriptors.shape[0] > max_desc:
         idx = np.random.choice(descriptors.shape[0], max_desc, replace=False)
         descriptors = descriptors[idx]

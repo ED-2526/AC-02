@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 import cv2
 import numpy as np
 from sklearn.cluster import KMeans
-from yellowbrick.cluster import KElbowVisualizer
+#from yellowbrick.cluster import KElbowVisualizer
    
 def bow_dataset_cv(K, X_train):
     
