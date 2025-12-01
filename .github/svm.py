@@ -6,7 +6,7 @@ import pandas as pd
 
 
 
-def calcula_prediccio_svm(X_train_df, Y_train_ser, X_test_df):
+def calcula_prediccio_svm(X_train_df, Y_train_ser, X_test_df, C):
     """
     Entrena un SVM sobre els histogrames BoW i fa prediccions sobre el test.
     Utilitza GridSearchCV per buscar bons hiperparàmetres (C i gamma).
@@ -18,39 +18,16 @@ def calcula_prediccio_svm(X_train_df, Y_train_ser, X_test_df):
     X_test = X_test_df.values.astype(float)
     y_train = Y_train_ser.values
 
-    # 2. Definim la graella d'hiperparàmetres per a l'SVM
-    # C controla quant “castiguem” els errors (més gran = menys marge, més overfitting)
-    # gamma controla la forma del kernel RBF (més gran = decisions més “locals”)
-    param_grid = {
-        "C": [0.1, 1, 10, 100],
-        "gamma": ["scale", 0.01, 0.001],
-        "kernel": ["rbf"]
-    }
-
-    # 3. Validació creuada estratificada per mantenir el balanç de classes a cada partició
-    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-
     # 4. Definim el model SVM bàsic
-    svm = SVC()
+    svm = SVC(kernel='rbf', C=C, class_weight='balanced', random_state=42, decision_function_shape='ovr')
 
-    # 5. GridSearchCV: prova totes les combinacions de C i gamma amb CV,
-    #    i es queda amb la que dona millor accuracy.
-    grid = GridSearchCV(
-        estimator=svm,
-        param_grid=param_grid,
-        cv=cv,
-        scoring="accuracy",
-        n_jobs=-1  # intenta aprofitar tots els cores disponibles
-    )
-
+    
     # 6. Entrenem el model sobre el train
-    grid.fit(X_train, y_train)
-
-    print("Millors hiperparàmetres trobats:", grid.best_params_)
-    print("Millor accuracy CV:", grid.best_score_)
+    svm.fit(X_train, y_train)
+     
 
     # 7. Fem les prediccions sobre el conjunt de test amb el millor model trobat
-    y_pred = grid.predict(X_test)
+    y_pred = svm.predict(X_test)
 
     return y_pred
 

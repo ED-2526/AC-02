@@ -5,6 +5,8 @@ from sklearn.model_selection import train_test_split
 import cv2
 import numpy as np
 from sklearn.cluster import KMeans
+from sklearn.cluster import MiniBatchKMeans
+
 #from yellowbrick.cluster import KElbowVisualizer
    
 def bow_dataset_cv(K, X_train):
@@ -62,44 +64,41 @@ def bow_dataset_sklearn(K, X_train):
     bow_centers = model.cluster_centers_
     return bow_centers
 
+def bow_dataset_sklearn_fast(K, X_train, batch_size=10000):
+    """
+    Crea un vocabulari BoW amb MiniBatchKMeans a partir dels descriptors SIFT d'entrenament.
 
+    Paràmetres:
+    - K: nombre de clusters (visual words)
+    - X_train: llista o pandas Series amb matrius de descriptors SIFT de cada imatge
+    - batch_size: nombre de descriptors per iteració de MiniBatchKMeans
 
-def bow_dataset2(X_train):
+    Retorna:
+    - bow_centers: centres dels clusters (vocabulari visual)
+    """
 
-    # 1. Apil·lem tots els descriptors en una sola matriu
+    # 1️⃣ Ajuntar tots els descriptors en una sola matriu
+    # X_train.values és una llista de matrius numpy (N_i, 128)
     all_train_descriptors = np.vstack(X_train.values)
 
-    # 2. Creem el model KMeans
-    model = KMeans(
-        init='k-means++',  # com inicialitzar els centres ('random'també és possible)
-        max_iter=100,      # màxim d’iteracions
-        tol=0.01,          # tolerància per parar
-        n_init=10,         # intents diferents amb inicialitzacions diferents
+    # 2️⃣ Crear el model MiniBatchKMeans
+    model = MiniBatchKMeans(
+        n_clusters=K,            # nombre de visual words
+        batch_size=batch_size,    # descriptors per iteració
+        max_iter=100,             # màxim d’iteracions
+        init='k-means++',         # inicialització intel·ligent
         random_state=42
-    )   
+    )
 
-    # 3. Creem el visualizer i triem la mètrica elbow o silhouette
-    
-    # KElbowVisualizer → eina de Yellowbrick que ajuda a triar automàticament K.
-    # k=(40, 50) → prova valors de K entre 40 i 50.
-    # metric='distortion' → calcula la distorsió, és a dir la suma de distàncies dels descriptors als centres assignats.
-    
-    visualizer = KElbowVisualizer(model, k=(40, 50), metric='distortion')  # ajusta k màxim segons el que vulguis
-    visualizer.fit(all_train_descriptors)
+    # 3️⃣ Entrenar el model sobre tots els descriptors
+    model.fit(all_train_descriptors)
 
-    # 4. Millor nombre de clusters automàtic
+    # 4️⃣ Obtenir els centres del vocabulari visual
+    bow_centers = model.cluster_centers_
 
-    # visualizer.elbow_value_ → retorna el K on l’elbow és més clar.
-    # Això ens dóna el nombre ideal de paraules visuals per al nostre dataset.
-    
-    best_k = visualizer.elbow_value_
-    print("Millor k trobat:", best_k)
+    return bow_centers
 
-    # 5. Entrenem KMeans final amb el millor k
-    final_kmeans = KMeans(n_clusters=best_k)
-    final_kmeans.fit(all_train_descriptors)
-    bow_centers = final_kmeans.cluster_centers_
-    print("Shape bow_centers:", bow_centers.shape)
+
 
 
 
