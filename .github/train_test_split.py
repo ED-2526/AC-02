@@ -9,7 +9,7 @@ import csv
 # ============================================================
 # 1. Funció per obtenir descriptors SIFT
 # ============================================================
-def get_sift_descriptors_for_image(img_path):
+def get_sift_descriptors_for_image(img_path,step):
     """
     Extreu descriptors SIFT DENSOS:
     - Es crea una graella regular de keypoints cada 'step' píxels.
@@ -24,7 +24,7 @@ def get_sift_descriptors_for_image(img_path):
     h, w = img.shape #agafem l'alçacada i amplada de la imatge
 
     #Paràmetres de la graella
-    step = 15        #un keypoint cada 5 píxels
+    step = step        #un keypoint cada 5 píxels
     kp_size = 5.0   #quan al voltant mirem, mida del keypoint
 
     keypoints = [] #llista on recorrem els keypoints
@@ -67,7 +67,7 @@ def save_image_pickle(descriptors, label, plat, image_index, pickle_path):
 # ============================================================
 # 3. Funció principal per processar dataset
 # ============================================================
-def train_test_split_dataset(test_size=0.2):
+def train_test_split_dataset(test_size=0.2,step=30):
     base_path = os.getcwd() #directori actual
     images_path = os.path.join(base_path, "Indian Food Generalitzat") #carpeta amb les imatges
     pickle_root = os.path.join(base_path, "Pickles Per Imatge") #carpeta on guardarem els pickles
@@ -120,7 +120,7 @@ def train_test_split_dataset(test_size=0.2):
                     continue #si ja existeix el pickle, saltem a la següent imatge
                 else:
                     #Sinó: calcular SIFT i guardar pickle
-                    descriptors = get_sift_descriptors_for_image(img_path) #aqui extraiem els descriptors SIFT
+                    descriptors = get_sift_descriptors_for_image(img_path,step) #aqui extraiem els descriptors SIFT
                     if descriptors is None:
                         continue
 
