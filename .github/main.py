@@ -14,7 +14,7 @@ x_train_dataset, x_test_dataset, y_train, y_test, id_train, id_test = train_test
 
 #print(x_train_dataset.values)  #això és una llista de matrius numpy
 
-bow_centers = bow_dataset_sklearn_fast(K,x_train_dataset)
+bow_centers = bow_dataset_cv(K,x_train_dataset)
 #bow_centers = bow_dataset2(x_train_dataset)
 x_train = calcula_histograma_train(x_train_dataset,bow_centers) #això ens un panda dataframe on cada fila és l'histograma d'una imatge i cada columna una paraula visual
 x_test = calcula_histograma_train(x_test_dataset,bow_centers)#això és el mateix però al test
