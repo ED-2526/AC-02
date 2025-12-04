@@ -1,4 +1,3 @@
-
 import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -76,27 +75,32 @@ def bow_dataset_sklearn_fast(K, X_train, batch_size=10000):
     Retorna:
     - bow_centers: centres dels clusters (vocabulari visual)
     """
+    print("Entrenant MiniBatchKMeans amb K =", K, "clusters i batch_size =", batch_size)
 
-    # 1️⃣ Ajuntar tots els descriptors en una sola matriu
+    # Ajuntar tots els descriptors en una sola matriu
     # X_train.values és una llista de matrius numpy (N_i, 128)
     all_train_descriptors = np.vstack(X_train.values)
 
-    # 2️⃣ Crear el model MiniBatchKMeans
+    #Crear el model MiniBatchKMeans
     model = MiniBatchKMeans(
-        n_clusters=K,            # nombre de visual words
-        batch_size=batch_size,    # descriptors per iteració
-        max_iter=100,             # màxim d’iteracions
-        init='k-means++',         # inicialització intel·ligent
+        n_clusters=K,            #nombre de visual words
+        batch_size=batch_size,    #descriptors per iteració
+        max_iter=100,             #màxim d’iteracions
+        init='k-means++',         #inicialització intel·ligent
         random_state=42
     )
+    #A cada calcul dels nous centres, només utilitza un "batch" aleatori de descriptors en lloc de tots 
 
-    # 3️⃣ Entrenar el model sobre tots els descriptors
+    #Entrenar el model sobre tots els descriptors
     model.fit(all_train_descriptors)
 
-    # 4️⃣ Obtenir els centres del vocabulari visual
+    # Obtenir els centres del vocabulari visual
     bow_centers = model.cluster_centers_
 
     return bow_centers
+
+
+
 
 
 

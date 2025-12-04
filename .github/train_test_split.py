@@ -147,7 +147,7 @@ def train_test_split_dataset(test_size=0.2,step=30):
     x_train, x_test, y_train, y_test, id_train, id_test = train_test_split(
         df["descriptors"],
         df["label"],
-        df["image_index"],
+        df["image_index"], #això és el que enllaça amb el id_train i id_test
         test_size=test_size,
         random_state=42,
         stratify=df["label"]
