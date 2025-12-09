@@ -1,3 +1,4 @@
+
 import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -97,10 +98,7 @@ def bow_dataset_sklearn_fast(K, X_train, batch_size=10000):
     # Obtenir els centres del vocabulari visual
     bow_centers = model.cluster_centers_
 
-    return bow_centers
-
-
-
+    return bow_centers, model
 
 
 
