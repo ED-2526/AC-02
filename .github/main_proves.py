@@ -10,22 +10,15 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-
-
 step = 10
 kp_size = 6.0
 test_size = 0.3
-#gamma = "scale"
-kernel = 'poly'
+gamma = "scale"
+kernel = 'rbf'
 degree = 2
 k = 2000
 c=10.0
-#K_list = [500, 1000, 2000, 3000, 5000, 8000]
-#c_list = [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0]
-#step = [10, 15,20,30,40,50]
-#kp_size = [1,3,5,7]
 
-#degrees = [1,2,3,4,5,6,7,8]
 
 RESULTS_FILE = (
     f"VARIA_GAMMA_DEGREE_fixe_K{k}_c{c}_step{step}_kp_size{kp_size}_test{test_size}_"
@@ -33,17 +26,8 @@ RESULTS_FILE = (
 )
 
 
-gamma = [0.1, 0.01, 0.001, 0.0001, 'scale']
-kernels = ['poly', 'rbf']
 
-HISTOGRAMS_PICKLE_FILE = f"histograms_C{c}_K{k}_step{step}_kp{kp_size}.pkl"
-
-primera = True
-
-for gamma in gamma:
-    for kernel in kernels:
-
-        with open(RESULTS_FILE, "a") as f:
+with open(RESULTS_FILE, "a") as f:
                 
                 print(f"Inici prova: C={c}, K={k}")
                 
@@ -57,10 +41,10 @@ for gamma in gamma:
                 x_train_dataset, x_test_dataset, y_train, y_test, id_train, id_test = train_test_split_dataset(
                     test_size, step, kp_size)
                 
-                if primera:
-                    # 2. Cluster centers
-                    bow_centers, kmeans_model = bow_dataset_sklearn_fast(k, x_train_dataset)
-                    primera = False
+               
+                # 2. Cluster centers
+                bow_centers, kmeans_model = bow_dataset_sklearn_fast(k, x_train_dataset)
+                primera = False
 
                     
                 print("Calculant histogrames")
