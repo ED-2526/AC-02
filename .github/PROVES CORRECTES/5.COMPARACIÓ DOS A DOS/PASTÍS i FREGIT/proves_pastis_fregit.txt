@@ -1,0 +1,60 @@
+C = 0.01
+
+Accuracy:  0.8083
+Precision: 0.8091
+Recall:    0.8083
+F1-score:  0.8082
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_FREGITS
+DOLCOS_BARRA_PASTIS                   50              10
+DOLCOS_FREGITS                        13              47
+
+C = 0.1
+
+Accuracy:  0.8083
+Precision: 0.8091
+Recall:    0.8083
+F1-score:  0.8082
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_FREGITS
+DOLCOS_BARRA_PASTIS                   50              10
+DOLCOS_FREGITS                        13              47
+
+C = 1.0
+
+Accuracy:  0.7917
+Precision: 0.7917
+Recall:    0.7917
+F1-score:  0.7917
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_FREGITS
+DOLCOS_BARRA_PASTIS                   48              12
+DOLCOS_FREGITS                        13              47
+
+C = 10.0
+
+Accuracy:  0.7750
+Precision: 0.7788
+Recall:    0.7750
+F1-score:  0.7742
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_FREGITS
+DOLCOS_BARRA_PASTIS                   50              10
+DOLCOS_FREGITS                        17              43
+
+C = 100.0
+
+Accuracy:  0.7750
+Precision: 0.7788
+Recall:    0.7750
+F1-score:  0.7742
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_FREGITS
+DOLCOS_BARRA_PASTIS                   50              10
+DOLCOS_FREGITS                        17              43
+

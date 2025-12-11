@@ -1,0 +1,57 @@
+C = 0.01
+
+Accuracy:  0.6917
+Precision: 0.7247
+Recall:    0.6917
+F1-score:  0.6799
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_CREMOSOS
+DOLCOS_BARRA_PASTIS                   30               30
+DOLCOS_CREMOSOS                        7               53
+
+C = 0.1
+
+Accuracy:  0.6917
+Precision: 0.7247
+Recall:    0.6917
+F1-score:  0.6799
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_CREMOSOS
+DOLCOS_BARRA_PASTIS                   30               30
+DOLCOS_CREMOSOS                        7               53
+
+C = 1.0
+Accuracy:  0.7750
+Precision: 0.7751
+Recall:    0.7750
+F1-score:  0.7750
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_CREMOSOS
+DOLCOS_BARRA_PASTIS                   46               14
+DOLCOS_CREMOSOS                       13               47
+
+C = 10.0
+Accuracy:  0.7917
+Precision: 0.7917
+Recall:    0.7917
+F1-score:  0.7917
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_CREMOSOS
+DOLCOS_BARRA_PASTIS                   48               12
+DOLCOS_CREMOSOS                       13               47
+
+C = 100.0
+Accuracy:  0.7917
+Precision: 0.7917
+Recall:    0.7917
+F1-score:  0.7917
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_CREMOSOS
+DOLCOS_BARRA_PASTIS                   48               12
+DOLCOS_CREMOSOS                       13               47
+
