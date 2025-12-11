@@ -1,0 +1,114 @@
+
+=============================================
+Prova: C=100.0, K=500, step=5, kp_size=6.0 
+=============================================
+Accuracy:  0.5185
+Precision: 0.5278
+Recall:    0.5185
+F1-score:  0.5197
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_CREMOSOS  DOLCOS_FREGITS  PA  PLATS AMB PANEER  PLATS AMB POLLASTRE  PLATS DE VERDURES
+DOLCOS_BARRA_PASTIS                   32                4               4  11                 2                    7                  0
+DOLCOS_CREMOSOS                       12               32               6   4                 2                    3                  1
+DOLCOS_FREGITS                        12                2              37   4                 1                    3                  1
+PA                                     9                6               5  29                 6                    3                  2
+PLATS AMB PANEER                       7                2               5   8                26                    5                  7
+PLATS AMB POLLASTRE                    4                2               8   3                 5                   32                  6
+PLATS DE VERDURES                      4                2               2   1                 7                    7                 22
+
+
+=============================================
+Prova: C=100.0, K=500, step=10, kp_size=6.0 
+=============================================
+Accuracy:  0.5432
+Precision: 0.5526
+Recall:    0.5432
+F1-score:  0.5437
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_CREMOSOS  DOLCOS_FREGITS  PA  PLATS AMB PANEER  PLATS AMB POLLASTRE  PLATS DE VERDURES
+DOLCOS_BARRA_PASTIS                   34                2               6  12                 2                    4                  0
+DOLCOS_CREMOSOS                       11               37               0   5                 2                    3                  2
+DOLCOS_FREGITS                        11                2              39   3                 1                    3                  1
+PA                                    12                5               5  27                 7                    2                  2
+PLATS AMB PANEER                       7                3               4   7                25                    6                  8
+PLATS AMB POLLASTRE                    3                1               9   5                 5                   30                  7
+PLATS DE VERDURES                      3                2               4   0                 3                    5                 28
+
+
+=============================================
+Prova: C=100.0, K=500, step=20, kp_size=6.0 
+=============================================
+Accuracy:  0.5333
+Precision: 0.5416
+Recall:    0.5333
+F1-score:  0.5358
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_CREMOSOS  DOLCOS_FREGITS  PA  PLATS AMB PANEER  PLATS AMB POLLASTRE  PLATS DE VERDURES
+DOLCOS_BARRA_PASTIS                   28                6               7  13                 2                    4                  0
+DOLCOS_CREMOSOS                        8               37               4   5                 2                    2                  2
+DOLCOS_FREGITS                         8                6              33   5                 1                    5                  2
+PA                                    10                5               2  32                 5                    1                  5
+PLATS AMB PANEER                       8                1               5   6                31                    6                  3
+PLATS AMB POLLASTRE                    1                3               8   6                 5                   31                  6
+PLATS DE VERDURES                      8                0               2   1                 4                    6                 24
+
+
+=============================================
+Prova: C=100.0, K=500, step=30, kp_size=6.0 
+=============================================
+Accuracy:  0.4938
+Precision: 0.5004
+Recall:    0.4938
+F1-score:  0.4928
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_CREMOSOS  DOLCOS_FREGITS  PA  PLATS AMB PANEER  PLATS AMB POLLASTRE  PLATS DE VERDURES
+DOLCOS_BARRA_PASTIS                   30                5               4  12                 5                    4                  0
+DOLCOS_CREMOSOS                        7               36               5   6                 1                    2                  3
+DOLCOS_FREGITS                         7                9              32   5                 3                    3                  1
+PA                                     5                7               6  31                 7                    2                  2
+PLATS AMB PANEER                       8                2               6  14                19                    6                  5
+PLATS AMB POLLASTRE                    2                3              10   8                 4                   29                  4
+PLATS DE VERDURES                      1                4               3   5                 4                    5                 23
+
+
+=============================================
+Prova: C=100.0, K=500, step=40, kp_size=6.0 
+=============================================
+Accuracy:  0.4716
+Precision: 0.4772
+Recall:    0.4716
+F1-score:  0.4703
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_CREMOSOS  DOLCOS_FREGITS  PA  PLATS AMB PANEER  PLATS AMB POLLASTRE  PLATS DE VERDURES
+DOLCOS_BARRA_PASTIS                   28                5               8  14                 3                    2                  0
+DOLCOS_CREMOSOS                        8               37               3   4                 4                    3                  1
+DOLCOS_FREGITS                         2                9              34   7                 2                    6                  0
+PA                                     7                9               2  28                 8                    3                  3
+PLATS AMB PANEER                       8                2               4  13                22                    8                  3
+PLATS AMB POLLASTRE                    5                1              12   8                 5                   23                  6
+PLATS DE VERDURES                      2                6               3   3                 9                    3                 19
+
+
+=============================================
+Prova: C=100.0, K=500, step=15, kp_size=6.0 
+=============================================
+Accuracy:  0.5432
+Precision: 0.5522
+Recall:    0.5432
+F1-score:  0.5443
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_CREMOSOS  DOLCOS_FREGITS  PA  PLATS AMB PANEER  PLATS AMB POLLASTRE  PLATS DE VERDURES
+DOLCOS_BARRA_PASTIS                   36                4               3   9                 3                    5                  0
+DOLCOS_CREMOSOS                       11               35               5   3                 2                    2                  2
+DOLCOS_FREGITS                         8                6              35   6                 2                    2                  1
+PA                                     9                5               2  30                 6                    2                  6
+PLATS AMB PANEER                       7                1               4   8                28                    6                  6
+PLATS AMB POLLASTRE                    5                0              11   4                 3                   30                  7
+PLATS DE VERDURES                      2                3               1   6                 4                    3                 26
+

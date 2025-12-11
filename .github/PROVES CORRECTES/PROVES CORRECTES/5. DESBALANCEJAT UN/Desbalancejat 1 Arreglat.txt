@@ -1,0 +1,38 @@
+
+=============================================
+Prova Desbalanceig 8 2 
+=============================================
+Accuracy:  0.5638
+Precision: 0.5889
+Recall:    0.5638
+F1-score:  0.5677
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_CREMOSOS  DOLCOS_FREGITS  PA  PLATS AMB PANEER  PLATS AMB POLLASTRE  PLATS DE VERDURES
+DOLCOS_BARRA_PASTIS                   32                4               8   8                 3                    5                  0
+DOLCOS_CREMOSOS                       11               31              13   3                 1                    1                  0
+DOLCOS_FREGITS                        17               25             106   7                13                   10                  2
+PA                                    10                4               9  29                 7                    0                  1
+PLATS AMB PANEER                       3                3               3   6                37                    7                  1
+PLATS AMB POLLASTRE                    2                2               8   2                 3                   42                  1
+PLATS DE VERDURES                      4                4               5   3                 6                    4                 19
+
+
+=============================================
+Prova Desbalanceig 4 1 
+=============================================
+Accuracy:  0.5613
+Precision: 0.5620
+Recall:    0.5613
+F1-score:  0.5609
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  DOLCOS_CREMOSOS  DOLCOS_FREGITS  PA  PLATS AMB PANEER  PLATS AMB POLLASTRE  PLATS DE VERDURES
+DOLCOS_BARRA_PASTIS                   31                2               9  11                 3                    2                  2
+DOLCOS_CREMOSOS                        9               36              10   5                 0                    0                  0
+DOLCOS_FREGITS                         9                9              80   2                 3                   14                  3
+PA                                     9                4               7  28                 4                    3                  5
+PLATS AMB PANEER                       5                1               5   4                32                    5                  8
+PLATS AMB POLLASTRE                    4                3               7   6                 5                   33                  2
+PLATS DE VERDURES                      1                6               7   1                 6                    3                 21
+
