@@ -1,0 +1,60 @@
+C =0.01
+
+Accuracy:  0.5583
+Precision: 0.6199
+Recall:    0.5583
+F1-score:  0.4933
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  PA
+DOLCOS_BARRA_PASTIS                   12  48
+PA                                     5  55
+
+C =0.1
+
+Accuracy:  0.5583
+Precision: 0.6199
+Recall:    0.5583
+F1-score:  0.4933
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  PA
+DOLCOS_BARRA_PASTIS                   12  48
+PA                                     5  55
+
+C =1.0
+
+Accuracy:  0.6667
+Precision: 0.6736
+Recall:    0.6667
+F1-score:  0.6633
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  PA
+DOLCOS_BARRA_PASTIS                   34  26
+PA                                    14  46
+
+C =10.0
+
+Accuracy:  0.6750
+Precision: 0.6750
+Recall:    0.6750
+F1-score:  0.6750
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  PA
+DOLCOS_BARRA_PASTIS                   40  20
+PA                                    19  41
+
+C =100.0
+
+Accuracy:  0.6583
+Precision: 0.6584
+Recall:    0.6583
+F1-score:  0.6583
+
+Matriu de confusió:
+                     DOLCOS_BARRA_PASTIS  PA
+DOLCOS_BARRA_PASTIS                   40  20
+PA                                    21  39
+
