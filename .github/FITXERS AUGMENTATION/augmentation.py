@@ -3,7 +3,7 @@ import numpy as np
 import random
 from numpy.lib.stride_tricks import as_strided
 
-def get_sift_descriptors_from_image(img, step, block_size):
+def get_color_descriptors_from_image(img, step, block_size):
     if img is None:
         return None
 
@@ -39,30 +39,30 @@ def augment_training_set(x_train, y_train, id_train, index_map, step, kp_size, n
     seed_global = seed 
 
     def augment_image(img, image_index, augment_index):
-        # Seed específica per augment
-        seed_local = seed_global + image_index + augment_index
+        #Seed específica per augment
+        seed_local = seed_global + image_index + augment_index #el index de la imatge és sempre el mateix, el seed global també, però varia el augment index
         random.seed(seed_local)
         np.random.seed(seed_local)
 
         aug = img.copy()
 
-        # Flip horitzontal
+        #Flip horitzontal
         if random.random() < 0.5:
             aug = cv2.flip(aug, 1)
 
-        # Rotació [-20°, +20°]
+        #Rotació [-20°, +20°]
         angle = random.uniform(-20, 20)
         
         h, w = aug.shape[:2]
         M = cv2.getRotationMatrix2D((w//2, h//2), angle, 1.0)
         aug = cv2.warpAffine(aug, M, (w, h), borderMode=cv2.BORDER_REFLECT_101)
 
-        # Canvi d'il·luminació (gamma)
+        #Canvi d'il·luminació (gamma)
         gamma = random.uniform(0.7, 1.3)
         look_up_table = np.array([((i / 255.0) ** gamma) * 255 for i in range(256)]).astype("uint8")
         aug = cv2.LUT(aug, look_up_table)
 
-        # Blur suau
+        #Blur suau
         if random.random() < 0.3:
             aug = cv2.GaussianBlur(aug, (5, 5), 0)
 
@@ -71,22 +71,23 @@ def augment_training_set(x_train, y_train, id_train, index_map, step, kp_size, n
     # ===========================
     # Loop sobre les imatges del train
     # ===========================
-    for i, (label, img_id) in enumerate(zip(y_train, id_train)):
+    for i, (label, img_id) in enumerate(zip(y_train, id_train)): #va per cada imatge del train
         img_path = str(index_map[img_id])
-        img = cv2.imread(img_path)
-        if label == "DOLCOS_FREGITS":
-            continue
+        img = cv2.imread(img_path) #obté la imatge
+        #if label == "DOLCOS_FREGITS":
+            #continue
         if img is None:
             print("ERROR augmentant:", img_path)
             continue
 
-        for aug_idx in range(num_aug):
-            img_aug = augment_image(img, image_index=img_id, augment_index=aug_idx)
-            descriptors_aug = get_sift_descriptors_from_image(img_aug, step, kp_size)
+        for aug_idx in range(num_aug): #per cada augmentation que li hem dit
+            img_aug = augment_image(img, image_index=img_id, augment_index=aug_idx) #fa un augment de la imatge
+            descriptors_aug = get_color_descriptors_from_image(img_aug, step, kp_size) #calcula els descriptors de la imatge
             if descriptors_aug is None:
                 continue
-
-            new_descriptors.append(descriptors_aug)
+            
+            #afegeix la imatge a la llista (descriptors, label i id)
+            new_descriptors.append(descriptors_aug) 
             new_labels.append(label)
             new_ids.append(next_id)
             next_id += 1
