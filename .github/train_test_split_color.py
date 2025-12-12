@@ -18,39 +18,46 @@ import numpy as np
 import cv2
 from numpy.lib.stride_tricks import as_strided
 
-def  get_sift_descriptors_for_image(img_path, step, block_size):
+def  get_color_image(img_path, step, block_size):
     img = cv2.imread(img_path, cv2.IMREAD_COLOR)
     if img is None:
         print("ERROR loading:", img_path)
         return None
 
-    h, w, c = img.shape
-    bs = int(block_size)
-    st = int(step)
+    h, w, c = img.shape #obtenim les dimensions
+    bs = int(block_size) #el block size és com el kp_size
+    st = int(step) #el step es el pas
 
-    # Nombre de blocs
-    ny = (h - bs) // st + 1
-    nx = (w - bs) // st + 1
+    #Nombre de blocs
+    ny = (h - bs) // st + 1 #nombre de blocs en vertical 
+    nx = (w - bs) // st + 1 #nombre de blocs en horitzontal 
 
-    # Strides originals
-    stride_y, stride_x, stride_c = img.strides
+    #Strides originals
+    stride_y, stride_x, stride_c = img.strides#això és que numpy guarda la matriu en una fila i això et diu quan has de saltar per anar a la següent fila, a la seguent columna o al següent color
 
-    # Crear vista 5D: (ny, nx, bs, bs, channels)
+    #(una foto 200*200) per exemple si volem saltar una fila 600, si volem al seguent pixel 3 i al seguent color 1
+
+    #Crear vista 5D: (ny, nx, bs, bs, channels)
     blocks = as_strided(
         img,
         shape=(ny, nx, bs, bs, c),
         strides=(st * stride_y, st * stride_x, stride_y, stride_x, stride_c),
         writeable=False
     )
+    #a shape tenim:
+    # ny = indicador vertial (1 fins ny-1), nx = indicador horitzonal (1 fins nx-1), bs són files i columnes dins del bloc i la c el nombre de components 
+    #el que fem és reinterpretar la memòria de la imtage, però no modifiquem la original
+    #ara en comptes de guardar la imatge per ordre el que fem és guardem els blocs en ordre de manera consecutiva
 
-    # Mitjana i desviació per canal (sobre les dimensions del bloc)
-    means = blocks.mean(axis=(2, 3))
-    stds  = blocks.std(axis=(2, 3))
+    #per cada canal el que fem és calcular la mitjana i la desviació típica
+    means = blocks.mean(axis=(2, 3)) #saltem les dues primeres pq són la posicio x i y del block que no ens interessa
+    stds  = blocks.std(axis=(2, 3)) 
 
-    # Unir mean + std → (ny, nx, 6)
+    
+    #aleshores per cada block teniem (x,y, [[mean_B, mean_G, mean_R]] i x,y, [std_B, std_G, std_R]) accabem tenint (x,y,descriptors)
     descriptors = np.concatenate([means, stds], axis=-1)
 
-    # Aplanar a (N, 6)
+    #el que acabem obtenint és una matriu 2x2 on cada fila és un block (en ordre) i cada columna és un array de 6 posicions (mitjana i desviació)
     return descriptors.reshape(-1, 6)
 
 
@@ -128,7 +135,7 @@ def train_test_split_dataset(test_size,step, kp_size):
                     continue #si ja existeix el pickle, saltem a la següent imatge
                 else:
                     #Sinó: calcular SIFT i guardar pickle
-                    descriptors = get_sift_descriptors_for_image(img_path,step, kp_size) #aqui extraiem els descriptors SIFT
+                    descriptors = get_color_image(img_path,step, kp_size) #aqui extraiem els descriptors SIFT
                     if descriptors is None:
                         continue
 
