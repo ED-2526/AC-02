@@ -5,47 +5,54 @@ import numpy as np
 import cv2
 import pickle
 import csv
+import cv2
+import numpy as np
+from skimage.feature import local_binary_pattern 
+from numpy.lib.stride_tricks import as_strided
 
-# ============================================================
-# 1. Funció per obtenir descriptors SIFT
-# ============================================================
-def get_sift_descriptors_for_image(img_path,step, kp_size):
-    """
-    Extreu descriptors SIFT DENSOS:
-    - Es crea una graella regular de keypoints cada 'step' píxels.
-    - Per cada punt de la graella es calcula un descriptor SIFT.
-    """
-    sift = cv2.SIFT_create() #creem un descriptor SIFT
-
-    img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+def  get_color_image(img_path, step, block_size):
+    img = cv2.imread(img_path, cv2.IMREAD_COLOR)
     if img is None:
+        print("ERROR loading:", img_path)
         return None
 
-    h, w = img.shape #agafem l'alçacada i amplada de la imatge
+    h, w, c = img.shape #obtenim les dimensions
+    bs = int(block_size) #el block size és com el kp_size
+    st = int(step) #el step es el pas
 
-    #Paràmetres de la graella
-    step = step        #un keypoint cada 5 píxels
-    kp_size = kp_size   #quan al voltant mirem, mida del keypoint
+    #Nombre de blocs
+    ny = (h - bs) // st + 1 #nombre de blocs en vertical 
+    nx = (w - bs) // st + 1 #nombre de blocs en horitzontal 
 
-    keypoints = [] #llista on recorrem els keypoints
-    #Recorrem la imatge amb una graella regular
-    for y in range(0, h, step):
-        for x in range(0, w, step):
-            keypoints.append(cv2.KeyPoint(float(x), float(y), kp_size))#gurdem el keypoint a la llista
+    #Strides originals
+    stride_y, stride_x, stride_c = img.strides#això és que numpy guarda la matriu en una fila i això et diu quan has de saltar per anar a la següent fila, a la seguent columna o al següent color
 
-    #perquè els keypoints els definim nosaltres (graella densa)
-    #passem directament els keypoints al compute, la llista
-    keypoints, descriptors = sift.compute(img, keypoints) #aqui nomes calculem els descriptors del punt que ja sabem
+    #(una foto 200*200) per exemple si volem saltar una fila 600, si volem al seguent pixel 3 i al seguent color 1
 
-    if descriptors is None or len(descriptors) == 0:
-        return None
+    #Crear vista 5D: (ny, nx, bs, bs, channels)
+    blocks = as_strided(
+        img,
+        shape=(ny, nx, bs, bs, c),
+        strides=(st * stride_y, st * stride_x, stride_y, stride_x, stride_c),
+        writeable=False
+    )
+    #a shape tenim:
+    # ny = indicador vertial (1 fins ny-1), nx = indicador horitzonal (1 fins nx-1), bs són files i columnes dins del bloc i la c el nombre de components 
+    #el que fem és reinterpretar la memòria de la imtage, però no modifiquem la original
+    #ara en comptes de guardar la imatge per ordre el que fem és guardem els blocs en ordre de manera consecutiva
 
-    """
-    if descriptors.shape[0] > max_desc:
-        idx = np.random.choice(descriptors.shape[0], max_desc, replace=False)
-        descriptors = descriptors[idx]
-    """
-    return descriptors #array de numpy de mida (N,128) on N és el nombre de descriptors SIFT extrets de la imatge
+    #per cada canal el que fem és calcular la mitjana i la desviació típica
+    means = blocks.mean(axis=(2, 3)) #saltem les dues primeres pq són la posicio x i y del block que no ens interessa
+    stds  = blocks.std(axis=(2, 3)) 
+
+    
+    #aleshores per cada block teniem (x,y, [[mean_B, mean_G, mean_R]] i x,y, [std_B, std_G, std_R]) accabem tenint (x,y,descriptors)
+    descriptors = np.concatenate([means, stds], axis=-1)
+
+    #el que acabem obtenint és una matriu 2x2 on cada fila és un block (en ordre) i cada columna és un array de 6 posicions (mitjana i desviació)
+    return descriptors.reshape(-1, 6)
+
+
 
 # ============================================================
 # 2. Funció per guardar un pickle per imatge
@@ -62,15 +69,13 @@ def save_image_pickle(descriptors, label, plat, image_index, pickle_path):
     with open(pickle_path, "wb") as f:
         pickle.dump(data, f)
 
-###CAL FER UNA FUNCIÓ QUE AGAFI ELS PIXELS QUE DEMANEM
-
 # ============================================================
 # 3. Funció principal per processar dataset
 # ============================================================
 def train_test_split_dataset(test_size,step, kp_size):
     base_path = os.getcwd() #directori actual
-    images_path = os.path.join(base_path, "Indian Food Generalitzat Balancejat") #carpeta amb les imatges
-    pickle_root = os.path.join(base_path, "Pickles Per Imatge") #carpeta on guardarem els pickles
+    images_path = os.path.join(base_path, "DATASETS\\Indian Food Generalitzat Balancejat Resize") #carpeta amb les imatges
+    pickle_root = os.path.join(base_path, "Pickles Per Imatge en Color") #carpeta on guardarem els pickles
 
     os.makedirs(pickle_root, exist_ok=True) #creem la carpeta si no existeix, on guardarem els pickles
 
@@ -120,7 +125,7 @@ def train_test_split_dataset(test_size,step, kp_size):
                     continue #si ja existeix el pickle, saltem a la següent imatge
                 else:
                     #Sinó: calcular SIFT i guardar pickle
-                    descriptors = get_sift_descriptors_for_image(img_path,step, kp_size) #aqui extraiem els descriptors SIFT
+                    descriptors = get_color_image(img_path,step, kp_size) #aqui extraiem els descriptors SIFT
                     if descriptors is None:
                         continue
 
@@ -144,29 +149,30 @@ def train_test_split_dataset(test_size,step, kp_size):
     df = pd.DataFrame(df_rows, columns=["descriptors", "label","plat", "image_index"])
 
     #Aqui fem el train test split
-    x_train, x_test, y_train, y_test, id_train, id_test = train_test_split(
+
+    x_train, x_temp, y_train, y_temp, id_train, id_temp = train_test_split(
         df["descriptors"],
         df["label"],
-        df["image_index"], #això és el que enllaça amb el id_train i id_test
-        test_size=test_size,
+        df["image_index"],
+        test_size=0.3,
         random_state=42,
         stratify=df["label"]
     )
+    
+    #split temp en validation i test
+   
+    
+    x_val, x_test, y_val, y_test, id_val, id_test = train_test_split(
+        x_temp, y_temp, id_temp,
+        test_size=0.5,
+        random_state=42,
+        stratify=y_temp
+    )
+    
+    return x_train, x_val, x_test, y_train, y_val, y_test, id_train, id_val, id_test
+
     #ara el que volem endivinar és el label, que és el plat general (pa, postres, dolços, etc), si volem endivinar el plat concret, hauríem de posar "plat" en comptes de "label"
 
-    return x_train, x_test, y_train, y_test, id_train, id_test
 
-# ============================================================
-# 4. Exemple si s'executa directament
-# ============================================================
-if __name__ == "__main__":
-    x_train, x_test, y_train, y_test, id_train, id_test = train_test_split_dataset()
 
-    print("\nTrain images:", len(x_train))
-    print("Test images:", len(x_test))
 
-    print("\nClasses al train:", sorted(list(set(y_train))))
-    print("Exemple train:")
-    print("  Image index:", id_train.iloc[0])
-    print("  Label:", y_train.iloc[0])
-    print("  Descriptors shape:", x_train.iloc[0].shape)
