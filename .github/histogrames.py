@@ -19,7 +19,7 @@ def bow_histogram(descriptors, kmeans_model, k): #calcula l'historgama per cada 
 
 #aquesta funció calcula els histogrames per totes les imatges del conjunt d’entrenament.
 #x → llista o pandas.Series amb descriptors per cada imatge.
-def calcula_histograma_train(X, kmeans_model, k):
+def calcula_histograma(X, kmeans_model, k):
     
 
     hists = []

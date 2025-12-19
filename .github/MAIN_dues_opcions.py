@@ -1,6 +1,6 @@
 from train_test_split_color_histogram import train_test_split_dataset
 from bow import  bow_dataset_sklearn_fast
-from histogrames import calcula_histograma_train
+from histogrames import calcula_histograma
 from dues_opcions import calcula_prediccio_dues_opcions, avalua_prediccions_dues_opcions
 import pandas as pd
 import numpy as np
@@ -27,9 +27,9 @@ bow_centers, kmeans_model = bow_dataset_sklearn_fast(k, x_train_dataset)
                         
 print("Calculant histogrames")
 # 3.Histogrames
-x_train = calcula_histograma_train(x_train_dataset, kmeans_model, k)
-x_test = calcula_histograma_train(x_test_dataset, kmeans_model,k)
-x_val = calcula_histograma_train(x_val_dataset, kmeans_model,k)
+x_train = calcula_histograma(x_train_dataset, kmeans_model, k)
+x_test = calcula_histograma(x_test_dataset, kmeans_model,k)
+x_val = calcula_histograma(x_val_dataset, kmeans_model,k)
 
 
 #DADES DE TEST
