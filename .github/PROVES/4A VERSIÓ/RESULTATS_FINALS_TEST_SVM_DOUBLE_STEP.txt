@@ -1,0 +1,80 @@
+=============================================
+Prova FINAL DOUBLE STEP: C_primera=0.5, C_segona=100.0, K=2000, Step=12, Bins=8
+=============================================
+
+Strategy: Double Step (General + Especialista)
+Accuracy TRAIN: 0.9090
+Accuracy TEST:  0.6305
+------------------------------
+
+=============================================
+Prova FINAL DOUBLE STEP: C_primera=0.5, C_segona=50.0, K=2000, Step=12, Bins=8
+=============================================
+
+Strategy: Double Step (General + Especialista)
+Accuracy TRAIN: 0.9090
+Accuracy TEST:  0.6305
+------------------------------
+
+=============================================
+Prova FINAL DOUBLE STEP: C_primera=0.5, C_segona=10.0, K=2000, Step=12, Bins=8
+=============================================
+
+Strategy: Double Step (General + Especialista)
+Accuracy TRAIN: 0.9090
+Accuracy TEST:  0.6305
+------------------------------
+
+=============================================
+Prova FINAL DOUBLE STEP: C_primera=0.5, C_segona=5.0, K=2000, Step=12, Bins=8
+=============================================
+
+Strategy: Double Step (General + Especialista)
+Accuracy TRAIN: 0.9090
+Accuracy TEST:  0.6305
+------------------------------
+
+=============================================
+Prova FINAL DOUBLE STEP: C_primera=0.5, C_segona=1.0, K=2000, Step=12, Bins=8
+=============================================
+
+Strategy: Double Step (General + Especialista)
+Accuracy TRAIN: 0.8931
+Accuracy TEST:  0.5961
+------------------------------
+
+=============================================
+Prova FINAL DOUBLE STEP: C_primera=0.5, C_segona=3.0, K=2000, Step=12, Bins=8
+=============================================
+
+Strategy: Double Step (General + Especialista)
+Accuracy TRAIN: 0.9090
+Accuracy TEST:  0.6305
+------------------------------
+
+=============================================
+Prova FINAL DOUBLE STEP: C_primera=0.5, C_segona=2.0, K=2000, Step=12, Bins=8
+=============================================
+
+Strategy: Double Step (General + Especialista)
+Accuracy TRAIN: 0.9079
+Accuracy TEST:  0.6305
+------------------------------
+
+=============================================
+Prova FINAL DOUBLE STEP: C_primera=0.5, C_segona=1.5, K=2000, Step=12, Bins=8
+=============================================
+
+Strategy: Double Step (General + Especialista)
+Accuracy TRAIN: 0.9079
+Accuracy TEST:  0.6256
+------------------------------
+
+=============================================
+Prova FINAL DOUBLE STEP: C_primera=0.5, C_segona=0.5, K=2000, Step=12, Bins=8
+=============================================
+
+Strategy: Double Step (General + Especialista)
+Accuracy TRAIN: 0.8550
+Accuracy TEST:  0.5911
+------------------------------

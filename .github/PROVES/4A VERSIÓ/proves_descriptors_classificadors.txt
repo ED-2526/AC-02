@@ -1,0 +1,53 @@
+1. PARÀMETRES DELS CLASSIFICADORS
+---------------------------------
+[SVM]
+  - C: 1.0
+  - Gamma: 'scale'
+  - Kernel: RBF
+
+[XgBoost]
+  - Nº estimadors: 100
+  - Max_depth: 6
+  - Learning rate: 0.3
+
+[SVM Histogram]
+  - C: 1.0
+  - Kernel: hist_intersection
+
+
+2. PARÀMETRES DELS DESCRIPTORS
+------------------------------
+[SIFT Descriptors]
+  - K: 1000
+  - Step: 10
+  - kp_size: 15
+
+[Colors_histogram (nom 2)]
+  - K: 1000
+  - Step: 8
+  - block_size: 16
+  - bins: 8
+
+[Colors]
+  - K: 1000
+  - Step: 8
+  - block_size: 16
+
+
+3. RESULTATS D'ACCURACY (PRECISIÓ)
+----------------------------------
+
+--- Amb SIFT Descriptors ---
+SVM           : 0.594059405940594
+XgBoost       : 0.4603960396039604
+SVM Histogram : 0.5198019801980198
+
+--- Amb Colors_histogram ---
+SVM           : 0.5297029702970297
+XgBoost       : 0.6435643564356436
+SVM Histogram : 0.6139
+
+--- Amb Colors ---
+SVM           : 0.5396039603960396
+XgBoost       : 0.5792079207920792
+SVM Histogram : 0.6138613861386139

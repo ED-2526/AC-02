@@ -1,0 +1,55 @@
+C = 0.01
+Accuracy:  0.5714
+Precision: 0.3265
+Recall:    0.5714
+F1-score:  0.4156
+
+Matriu de confusió:
+                   PLATS AMB PANEER  PLATS DE VERDURES
+PLATS AMB PANEER                 60                  0
+PLATS DE VERDURES                45                  0
+
+C = 0.1
+Accuracy:  0.4571
+Precision: 0.7605
+Recall:    0.4571
+F1-score:  0.3168
+
+Matriu de confusió:
+                   PLATS AMB PANEER  PLATS DE VERDURES
+PLATS AMB PANEER                  3                 57
+PLATS DE VERDURES                 0                 45
+
+C = 1.0
+Accuracy:  0.7810
+Precision: 0.7805
+Recall:    0.7810
+F1-score:  0.7789
+
+Matriu de confusió:
+                   PLATS AMB PANEER  PLATS DE VERDURES
+PLATS AMB PANEER                 51                  9
+PLATS DE VERDURES                14                 31
+
+C = 10.0
+Accuracy:  0.7905
+Precision: 0.7909
+Recall:    0.7905
+F1-score:  0.7880
+
+Matriu de confusió:
+                   PLATS AMB PANEER  PLATS DE VERDURES
+PLATS AMB PANEER                 52                  8
+PLATS DE VERDURES                14                 31
+
+C = 100.0
+Accuracy:  0.7905
+Precision: 0.7909
+Recall:    0.7905
+F1-score:  0.7880
+
+Matriu de confusió:
+                   PLATS AMB PANEER  PLATS DE VERDURES
+PLATS AMB PANEER                 52                  8
+PLATS DE VERDURES                14                 31
+
