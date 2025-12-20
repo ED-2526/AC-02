@@ -15,6 +15,8 @@ xgboost_model.py: classificació i posterior avaluació amb el model XGBoost.
 double_step_svm.py: classificació i posterior avaluació amb el classificador Double Step (classificador específic per les categories en conflicte).
 dues_opcions.py: classificació i posterior avaluació amb el classificador Dues Opcions (valorar les dues respostes més probables que retorna l'SVM).
 
+Presentació: pdf de la presentació del projecte
+
 MAINS:
 
 MAIN_SVM.py: main de proves amb classificador SVM amb kernel d'Histogram Intersection.
